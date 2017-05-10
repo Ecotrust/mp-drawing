@@ -50,7 +50,7 @@ def get_drawings(request):
 
     return HttpResponse(dumps(json))
 
-
+# from drawing.rpc import *
 # def delete_drawing(request, uid):
 #     try:
 #         drawing_obj = get_feature_by_uid(uid)

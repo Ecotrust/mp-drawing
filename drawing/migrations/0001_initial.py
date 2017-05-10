@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
             name='AOI',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=b'255', verbose_name=b'Name')),
+                ('name', models.CharField(max_length=255, verbose_name=b'Name')),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name=b'Date Created')),
                 ('date_modified', models.DateTimeField(auto_now=True, verbose_name=b'Date Modified')),
                 ('object_id', models.PositiveIntegerField(null=True, blank=True)),
@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
             name='WindEnergySite',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=b'255', verbose_name=b'Name')),
+                ('name', models.CharField(max_length=255, verbose_name=b'Name')),
                 ('date_created', models.DateTimeField(auto_now_add=True, verbose_name=b'Date Created')),
                 ('date_modified', models.DateTimeField(auto_now=True, verbose_name=b'Date Modified')),
                 ('object_id', models.PositiveIntegerField(null=True, blank=True)),
