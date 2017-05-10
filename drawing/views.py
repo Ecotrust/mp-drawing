@@ -5,7 +5,7 @@ from json import dumps
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 
-from models import AOI, WindEnergySite
+from .models import AOI, WindEnergySite
 
 
 def get_drawings(request):

@@ -9,6 +9,7 @@ class AOI(GeometryFeature):
     class Meta:
         verbose_name = 'AOI'
         verbose_name_plural = 'AOIs'
+        app_label = 'drawing'
 
     description = models.TextField(null=True, blank=True)
 
@@ -92,6 +93,11 @@ class AOI(GeometryFeature):
 
 @register
 class WindEnergySite(GeometryFeature):
+    class Meta:
+        verbose_name = 'WindEnergySite'
+        verbose_name_plural = 'WindEnergySites'
+        app_label = 'drawing'
+
     description = models.TextField(null=True, blank=True)
 
     @property
