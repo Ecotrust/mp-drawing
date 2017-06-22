@@ -31,8 +31,7 @@ def get_drawings(request):
     try:
         shared_drawings = AOI.objects.shared_with_user(request.user)
     except Exception as e:
-        import ipdb
-        ipdb.set_trace()
+        shared_drawings = None
     for drawing in shared_drawings:
         if drawing not in drawings:
             username = drawing.user.username

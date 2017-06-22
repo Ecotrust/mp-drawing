@@ -13,3 +13,5 @@ $PIP install -r $MODULE_DIR/requirements.txt
 
 $PYTHON $PROJECT_DIR/marineplanner/manage.py migrate
 $PYTHON $PROJECT_DIR/marineplanner/manage.py enable_sharing --all
+
+apt-get install postgis -y
