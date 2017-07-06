@@ -4,5 +4,5 @@ rpc4django
 
 #required for mp-visualize, which is also required (for now)
 django-tinymce
-
+django-flatblocks
 -e /usr/local/apps/marineplanner-core/apps/mp-visualize
