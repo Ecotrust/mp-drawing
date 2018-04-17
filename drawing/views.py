@@ -75,6 +75,36 @@ def aoi_analysis(request, aoi_id):
         return response
     return display_aoi_analysis(request, aoi_obj)
 
+'''
+'''
+def get_attributes(request, uid):
+    from django.contrib.auth.models import User
+    from marineplanner import settings as mpSettings
+    try:
+        scenario_obj = get_feature_by_uid(uid)
+    except Scenario.DoesNotExist:
+        raise Http404
+
+    #check permissions
+    viewable, response = scenario_obj.is_viewable(request.user)
+    if not viewable:
+
+        if mpSettings.ALLOW_ANONYMOUS_DRAW:
+
+            anonUser = User.objects.get(pk=mpSettings.ANONYMOUS_USER_PK)
+            anonViewable, response = scenario_obj.is_viewable(anonUser)
+            if not anonViewable:
+                return response
+        else:
+            return response
+
+    if 'serialize_attributes' in dir(scenario_obj):
+        if hasattr(scenario_obj,'is_loading') and scenario_obj.is_loading:
+            scenario_obj.save()
+        return HttpResponse(dumps(scenario_obj.serialize_attributes()))
+    else:
+        return HttpResponse(dumps([]))
+
 
 def wind_analysis(request, wind_id):
     from wind_analysis import display_wind_analysis

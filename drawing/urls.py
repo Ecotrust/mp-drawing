@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^wind_report/(\d+)', wind_analysis, name='wind_analysis'), #user requested wind energy site analysis
     url(r'^aoi_report/(\d+)', aoi_analysis, name='aoi_analysis'), #user requested area of interest analysis
     url(r'^rpc$', serve_rpc_request, name='rpc'), #user requested area of interest analysis
+    url(r'get_attributes/(?P<uid>[\w_]+)/$', get_attributes), #get attributes for a given scenario
 ]
