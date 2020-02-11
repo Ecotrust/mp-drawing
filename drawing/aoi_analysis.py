@@ -1,6 +1,8 @@
 #from madrona.raster_stats.models import RasterDataset, zonal_stats
+from django.conf import settings
 from settings import *
-from models import *
+from general.utils import default_value, sq_meters_to_sq_miles
+from .models import *
 
 '''
 '''

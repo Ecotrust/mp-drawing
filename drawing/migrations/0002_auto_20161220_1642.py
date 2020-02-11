@@ -15,25 +15,25 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='aoi',
             name='geometry_final',
-            field=django.contrib.gis.db.models.fields.GeometryField(srid=3857, null=True, verbose_name=b'Final Polygon Geometry', blank=True),
+            field=django.contrib.gis.db.models.fields.GeometryField(srid=3857, null=True, verbose_name='Final Polygon Geometry', blank=True),
             preserve_default=True,
         ),
         migrations.AlterField(
             model_name='aoi',
             name='geometry_orig',
-            field=django.contrib.gis.db.models.fields.GeometryField(srid=3857, null=True, verbose_name=b'Original Polygon Geometry', blank=True),
+            field=django.contrib.gis.db.models.fields.GeometryField(srid=3857, null=True, verbose_name='Original Polygon Geometry', blank=True),
             preserve_default=True,
         ),
         migrations.AlterField(
             model_name='windenergysite',
             name='geometry_final',
-            field=django.contrib.gis.db.models.fields.GeometryField(srid=3857, null=True, verbose_name=b'Final Polygon Geometry', blank=True),
+            field=django.contrib.gis.db.models.fields.GeometryField(srid=3857, null=True, verbose_name='Final Polygon Geometry', blank=True),
             preserve_default=True,
         ),
         migrations.AlterField(
             model_name='windenergysite',
             name='geometry_orig',
-            field=django.contrib.gis.db.models.fields.GeometryField(srid=3857, null=True, verbose_name=b'Original Polygon Geometry', blank=True),
+            field=django.contrib.gis.db.models.fields.GeometryField(srid=3857, null=True, verbose_name='Original Polygon Geometry', blank=True),
             preserve_default=True,
         ),
     ]
