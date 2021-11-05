@@ -87,20 +87,33 @@
         <div id="step1" class="step">
             <p class="step-text"><i>Step 1 of 2 </i>
             <div data-bind="visible: ! showEdit()">
-                <p id="click-to-begin-drawing" class="instructions">Click the button below to begin drawing your polygon.</p>
-                <a class="btn btn-warning" style="margin-top: 10px" data-bind="click: startSketch, css: { disabled: isDrawing() }">
+                <p id="click-to-begin-drawing" class="instructions">Click one of the buttons below to begin drawing your map features.</p>
+                <a class="btn btn-warning" style="margin-top: 10px" data-bind="click: startPolygonSketch, css: { disabled: isDrawing() }">
                     <span>Draw Shape</span>
+                </a>
+                <a class="btn btn-warning" style="margin-top: 10px" data-bind="click: startLineSketch, css: { disabled: isDrawing() }">
+                    <span>Draw Line</span>
+                </a>
+                <a class="btn btn-warning" style="margin-top: 10px" data-bind="click: startPointSketch, css: { disabled: isDrawing() }">
+                    <span>Draw Point</span>
                 </a>
             </div>
             <div data-bind="visible: showEdit()">
                 <p class="instructions">Click <b>Next</b> if you are satisfied with your shape.</p>
-                <p class="instructions">Click <b>Edit Shape</b> if you would like to make changes to your shape.</p>
-                <p class="instructions">Click <b>Add Shape</b> if you would like to add more shapes to your drawing (multipolygon).</p>
+                <p class="instructions">Click <b>Edit Drawings</b> if you would like to make changes to your drawings.</p>
+                <p class="instructions">Click <b>Add (Feature)</b> if you would like to add more shapes to your drawing.</p>
                 <a class="btn btn-default" style="margin-top: 10px" data-bind="click: startEdit, css: { disabled: (isEditing() || isDrawing()) }">
-                    <span>Edit Shape</span>
+                    <span><b>Edit</b> Drawings</span>
                 </a>
-                <a class="btn btn-default" style="margin-top: 10px" data-bind="click: startSketch, css: { disabled: (isEditing() || isDrawing()) }">
-                    <span>Add Shape</span>
+                <br/>
+                <a class="btn btn-default" style="margin-top: 10px" data-bind="click: startPolygonSketch, css: { disabled: (isEditing() || isDrawing()) }">
+                    <span>Add <b>Shape</b></span>
+                </a>
+                <a class="btn btn-default" style="margin-top: 10px" data-bind="click: startLineSketch, css: { disabled: (isEditing() || isDrawing()) }">
+                    <span>Add <b>Line</b></span>
+                </a>
+                <a class="btn btn-default" style="margin-top: 10px" data-bind="click: startPointSketch, css: { disabled: (isEditing() || isDrawing()) }">
+                    <span>Add <b>Point</b></span>
                 </a>
                 <div data-bind="visible: isEditing()">
                     <p class="instructions">
