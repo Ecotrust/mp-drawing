@@ -67,8 +67,36 @@ class AOI(GeometryFeature):
 
     def serialize_attributes(self):
         attributes = []
-        attributes.append({'title': 'Area', 'data': '%.1f sq miles' % (self.area_in_sq_miles)})
-        attributes.append({'title': 'Description', 'data': self.description})
+        if self.geometry_final.geom_type in ['Polygon', 'MultiPolygon']:
+            attributes.append({'title': 'Area', 'data': '%.1f sq miles' % (self.area_in_sq_miles)})
+            attributes.append({'title': 'Description', 'data': self.description})
+        else:
+            # Assume GeometryCollection
+            total_area = 0
+            total_length = 0
+            points = []
+            for feature in self.geometry_final:
+                feature = feature.transform(2163, clone=True)
+                if feature.geom_type in ['Polygon', 'MultiPolygon']:
+                    total_area += feature.area
+                elif feature.geom_type in ['LineString',]:
+                    total_length += feature.length
+                elif feature.geom_type in ['Point',]:
+                    feature = feature.transform(4326, clone=True)
+                    points.append("[{0:.4g}, {1:.4g}]".format(feature.coords[0], feature.coords[1]))
+                else:
+                    print("NEW FEATURE TYPE: {}".format(feature.geom_type))
+            if total_area > 0:
+                attributes.append({'title': 'Area', 'data': '%.1f sq miles' % (self.area_in_sq_miles)})
+            if total_length > 0:
+                if total_length < 800:
+                    report_length = "{} feet ({} yds)".format(int(total_length/0.3048), int(total_length/0.9144))
+                else:
+                    report_length = "{0:.2g} miles".format(total_length/1609.344)
+                attributes.append({'title': 'Line Length', 'data': '{}'.format(report_length)})
+            if len(points) > 0:
+                attributes.append({'title': 'Point Coordinates', 'data': '{}'.format('; '.join(points))})
+            attributes.append({'title': 'Description', 'data': self.description})
         return { 'event': 'click', 'attributes': attributes }
 
     @classmethod
