@@ -83,7 +83,7 @@ class AOI(GeometryFeature):
                     total_length += feature.length
                 elif feature.geom_type in ['Point',]:
                     feature = feature.transform(4326, clone=True)
-                    points.append("[{0:.4g}, {1:.4g}]".format(feature.coords[1], feature.coords[0]))
+                    points.append("[{:.4f}, {:.4f}]".format(feature.coords[1], feature.coords[0]))
                 else:
                     print("NEW FEATURE TYPE: {}".format(feature.geom_type))
             if total_area > 0:
