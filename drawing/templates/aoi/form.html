@@ -106,13 +106,13 @@
                     <span><b>Edit</b> Drawings</span>
                 </a>
                 <br/>
-                <a class="btn btn-default" style="margin-top: 10px" data-bind="click: startPolygonSketch, css: { disabled: (isEditing() || isDrawing()) }">
+                <a class="btn btn-default" style="margin-top: 10px" data-bind="click: startPolygonSketch, css: { disabled: (isEditing() || isDrawing()) }, visible: sketchMode() == 'polygon'">
                     <span>Add <b>Shape</b></span>
                 </a>
-                <a class="btn btn-default" style="margin-top: 10px" data-bind="click: startLineSketch, css: { disabled: (isEditing() || isDrawing()) }">
+                <a class="btn btn-default" style="margin-top: 10px" data-bind="click: startLineSketch, css: { disabled: (isEditing() || isDrawing()) }, visible: sketchMode() == 'line'">
                     <span>Add <b>Line</b></span>
                 </a>
-                <a class="btn btn-default" style="margin-top: 10px" data-bind="click: startPointSketch, css: { disabled: (isEditing() || isDrawing()) }">
+                <a class="btn btn-default" style="margin-top: 10px" data-bind="click: startPointSketch, css: { disabled: (isEditing() || isDrawing()) }, visible:sketchMode() == 'point'">
                     <span>Add <b>Point</b></span>
                 </a>
                 <div data-bind="visible: isEditing()">
