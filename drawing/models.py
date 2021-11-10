@@ -92,7 +92,7 @@ class AOI(GeometryFeature):
                 if total_length < 800:
                     report_length = "{} feet ({} yds)".format(int(total_length/0.3048), int(total_length/0.9144))
                 else:
-                    report_length = "{0:.2g} miles".format(total_length/1609.344)
+                    report_length = "{:.2f} miles".format(total_length/1609.344)
                 attributes.append({'title': 'Line Length', 'data': '{}'.format(report_length)})
             if len(points) > 0:
                 attributes.append({'title': 'Point Coordinates', 'data': '{}'.format('; '.join(points))})
