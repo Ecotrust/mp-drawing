@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.contrib.auth.models import Group
 from features.models import Feature
 from features.registry import get_feature_by_uid
 from json import dumps
@@ -16,9 +18,18 @@ def get_drawings(request):
     drawings = AOI.objects.filter(user=request.user.id).order_by('date_created')
     for drawing in drawings:
         # Allow for "sharing groups" without an associated MapGroup, for "special" cases
-        sharing_groups = [group.mapgroup_set.get().name
-                          for group in drawing.sharing_groups.all()
-                          if group.mapgroup_set.exists()]
+        sharing_groups = [
+            group.mapgroup_set.get().name
+            for group in drawing.sharing_groups.all()
+            if group.mapgroup_set.exists()
+        ]
+        public_groups = [
+            group.name
+            for group in Group.objects.filter(name__in=settings.SHARING_TO_PUBLIC_GROUPS)
+            if group in drawing.sharing_groups.all()
+        ]
+        sharing_groups = sharing_groups + public_groups
+
         json.append({
             'id': drawing.id,
             'uid': drawing.uid,
