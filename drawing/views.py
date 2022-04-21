@@ -49,7 +49,7 @@ def get_drawings(request):
         if drawing not in drawings:
             username = drawing.user.username
             actual_name = drawing.user.first_name + ' ' + drawing.user.last_name
-            permission_groups = [x.permission_group for x in drawing.user.mapgroup_set.all()]
+            permission_groups = [x.permission_group for x in request.user.mapgroup_set.all()]
             sharing_groups = [
                 group.mapgroup_set.get().name
                 for group in drawing.sharing_groups.filter()
