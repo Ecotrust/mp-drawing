@@ -36,7 +36,8 @@ def get_drawings(request):
             'name': drawing.name,
             'description': drawing.description,
             'attributes': drawing.serialize_attributes(),
-            'sharing_groups': sharing_groups
+            'sharing_groups': sharing_groups,
+            'owned_by_user': True
         })
 
     try:
@@ -48,6 +49,19 @@ def get_drawings(request):
         if drawing not in drawings:
             username = drawing.user.username
             actual_name = drawing.user.first_name + ' ' + drawing.user.last_name
+            permission_groups = [x.permission_group for x in drawing.user.mapgroup_set.all()]
+            sharing_groups = [
+                group.mapgroup_set.get().name
+                for group in drawing.sharing_groups.filter()
+                if group.mapgroup_set.exists() and group in permission_groups
+            ]
+            owned_by_user = True if len(sharing_groups) > 0 else False
+            public_groups = [
+                group.name
+                for group in Group.objects.filter(name__in=settings.SHARING_TO_PUBLIC_GROUPS)
+                if group in drawing.sharing_groups.all()
+            ]
+            sharing_groups = sharing_groups + public_groups
             json.append({
                 'id': drawing.id,
                 'uid': drawing.uid,
@@ -55,8 +69,10 @@ def get_drawings(request):
                 'description': drawing.description,
                 'attributes': drawing.serialize_attributes(),
                 'shared': True,
+                'sharing_groups': sharing_groups,
                 'shared_by_username': username,
-                'shared_by_name': actual_name
+                'shared_by_name': actual_name,
+                'owned_by_user': owned_by_user
             })
 
     return HttpResponse(dumps(json))
