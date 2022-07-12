@@ -1,4 +1,17 @@
+{% load static %}
 <div class="featurepanel">
+    <!-- Support for zipped shapefiles: -->
+    <script type="text/javascript" src="{% static 'drawing/assets/shp2geojson/lib/jszip.js' %}"></script>
+    <script type="text/javascript" src="{% static 'drawing/assets/shp2geojson/lib/jszip-utils.js' %}"></script>
+    <script type="text/javascript" src="{% static 'drawing/assets/proj4/proj4.js' %}"></script>
+    <script type="text/javascript" src="{% static 'drawing/assets/shp2geojson/preprocess.js' %}"></script>
+    <script type="text/javascript" src="{% static 'drawing/assets/shp2geojson/preview.js' %}"></script>
+    
+    <!-- Support for unzipped shapefiles: -->
+    <script type="text/javascript" src="{% static 'drawing/assets/js-shapefile-to-geojson/stream.js' %}"></script>
+    <script type="text/javascript" src="{% static 'drawing/assets/js-shapefile-to-geojson/shapefile.js' %}"></script>
+    <script type="text/javascript" src="{% static 'drawing/assets/js-shapefile-to-geojson/dbf.js' %}"></script>
+
     <script type="text/javascript" charset="utf-8">
         madrona.onShow(function(){
             madrona.setupForm($('#polygon-design-form'));
@@ -7,19 +20,23 @@
             var step = 1;
 
             function validate(step) {
-                return_value = true;
+                let is_valid = false;
                 if (step == 1) {
-                    if ( app.viewModel.scenarios.drawingFormModel.isDrawing()) {
+                    if ( !app.viewModel.scenarios.drawingFormModel.isDrawing() && app.viewModel.scenarios.drawingFormModel.hasShape() ) {
+                        is_valid = true;
+                    } 
+                    if ( !app.viewModel.scenarios.drawingFormModel.isDrawing()) {
                         $('#double-click-instructions').effect("highlight", {}, 1000);
-                        return_value = false;
-                    } else if ( ! app.viewModel.scenarios.drawingFormModel.hasShape() ) {
+                        // is_valid = false;
+                    } 
+                    if ( ! app.viewModel.scenarios.drawingFormModel.hasShape() ) {
                         $('#click-to-begin-drawing').effect("highlight", {}, 1000);
-                        return_value = false;
+                        // is_valid = false;
                     }
                 } else if (step == max_step) {
-
+                    is_valid = true;
                 }
-                return return_value;
+                return is_valid;
             };
 
             function wizard(action) {
@@ -73,7 +90,7 @@
         });
     </script>
 
-    <h4>Drawing</h4>
+    <h4>Shapes</h4>
 
     <form id="polygon-design-form" action="{{action}}" method="post">
         {% for hidden in form.hidden_fields %}
@@ -97,6 +114,9 @@
                 <a class="btn btn-warning" style="margin-top: 10px" data-bind="click: startPointSketch, css: { disabled: isDrawing() }">
                     <span>Draw Point</span>
                 </a>
+                <br />
+                <br />
+                <p><i><b>OR</b></i> import a GIS file by dragging it over the map.</p>
             </div>
             <div data-bind="visible: showEdit()">
                 <p class="instructions">Click <b>Next</b> if you are satisfied with your shape.</p>
