@@ -116,7 +116,13 @@
                 </a>
                 <br />
                 <br />
-                <p><i><b>OR</b></i> import a GIS file by dragging it over the map.</p>
+                <!-- <p><i><b>OR</b></i> import a GIS file by dragging it over the map.</p> -->
+                <p>
+                    <i><b>OR</b></i> 
+                    <label for="gisfile">import from a file:</label> 
+                    <input type="file" id="gisfile" name="gisfile">
+                </p>
+                <p>What kind of file?<a class="btn">Help</a></p>
             </div>
             <div data-bind="visible: showEdit()">
                 <p class="instructions">Click <b>Next</b> if you are satisfied with your shape.</p>
@@ -212,5 +218,7 @@
             </div>
         </div>
     </form>
+
+    <script type="text/javascript" src="{% static 'drawing/js/import_gis.js' %}"></script>
 
 </div>
