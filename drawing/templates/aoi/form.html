@@ -114,23 +114,25 @@
                 <a class="btn btn-warning" style="margin-top: 10px" data-bind="click: startPointSketch, css: { disabled: isDrawing() }">
                     <span>Draw Point</span>
                 </a>
-                <br />
-                <br />
-                <!-- <p><i><b>OR</b></i> import a GIS file by dragging it over the map.</p> -->
-                <p>
-                    <i><b>OR</b></i> 
-                    <label for="gisfile">import from a file:</label> 
-                    <input type="file" id="gisfile" name="gisfile">
-                </p>
-                <p>What kind of file?<a class="btn">Help</a></p>
+                <div id="gis_import_form" data-bind="visible: (!showEdit() && !isDrawing())">
+                    <br />
+                    <p>
+                        <i><b>OR</b></i> 
+                        <label for="gisfile">import from a file:</label> 
+                        <input type="file" id="gisfile" name="gisfile">
+                    </p>
+                    <!-- <p>What kind of file?<a class="btn">Help</a></p> -->
+                </div>
             </div>
             <div data-bind="visible: showEdit()">
-                <p class="instructions">Click <b>Next</b> if you are satisfied with your shape.</p>
-                <p class="instructions">Click <b>Edit Drawings</b> if you would like to make changes to your drawings.</p>
-                <p class="instructions">Click <b>Add (Feature)</b> if you would like to add more shapes to your drawing.</p>
-                <a class="btn btn-default" style="margin-top: 10px" data-bind="click: startEdit, css: { disabled: (isEditing() || isDrawing()) }">
-                    <span><b>Edit</b> Drawings</span>
-                </a>
+                <div data-bind="visible: !isEditing()" id="edit-init-instructions">
+                    <p class="instructions">Click <b>Next</b> if you are satisfied with your shape.</p>
+                    <p class="instructions">Click <b>Edit Drawings</b> if you would like to make changes to your drawings.</p>
+                    <p class="instructions">Click <b>Add (Feature)</b> if you would like to add more shapes to your drawing.</p>
+                    <a class="btn btn-default" style="margin-top: 10px" data-bind="click: startEdit, css: { disabled: (isEditing() || isDrawing()) }">
+                        <span><b>Edit</b> Drawings</span>
+                    </a>
+                </div>
                 <br/>
                 <a class="btn btn-default" style="margin-top: 10px" data-bind="click: startPolygonSketch, css: { disabled: (isEditing() || isDrawing()) }, visible: sketchMode() == 'polygon'">
                     <span>Add <b>Shape</b></span>
