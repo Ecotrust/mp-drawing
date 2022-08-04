@@ -108,20 +108,23 @@
         <div id="step1" class="step">
             <p class="step-text"><i>Step 1 of 2 </i>
             <div data-bind="visible: ! showEdit()">
-                <p id="click-to-begin-drawing" class="instructions">Click one of the buttons below to begin drawing your map features.</p>
-                <a class="btn btn-warning" style="margin-top: 10px" data-bind="click: startPolygonSketch, css: { disabled: isDrawing() }">
-                    <span>Draw Shape</span>
-                </a>
-                <a class="btn btn-warning" style="margin-top: 10px" data-bind="click: startLineSketch, css: { disabled: isDrawing() }">
-                    <span>Draw Line</span>
-                </a>
-                <a class="btn btn-warning" style="margin-top: 10px" data-bind="click: startPointSketch, css: { disabled: isDrawing() }">
-                    <span>Draw Point</span>
-                </a>
+                <div id="draw-buttons-wrapper" data-bind="visible: (!isImporting())">
+                    <p id="click-to-begin-drawing" class="instructions">Click one of the buttons below to begin drawing your map features.</p>
+                    <a class="btn btn-warning" style="margin-top: 10px" data-bind="click: startPolygonSketch, css: { disabled: isDrawing() }">
+                        <span>Draw Shape</span>
+                    </a>
+                    <a class="btn btn-warning" style="margin-top: 10px" data-bind="click: startLineSketch, css: { disabled: isDrawing() }">
+                        <span>Draw Line</span>
+                    </a>
+                    <a class="btn btn-warning" style="margin-top: 10px" data-bind="click: startPointSketch, css: { disabled: isDrawing() }">
+                        <span>Draw Point</span>
+                    </a>
+                </div>
+                
                 <div id="gis_import_form" data-bind="visible: (!showEdit() && !isDrawing())">
                     <br />
                     <p>
-                        <i><b>OR</b></i> 
+                        <i data-bind="visible: (!isImporting())"><b>OR</b></i> 
                         <label for="gisfile">import from a file:</label> 
                         <input type="file" id="gisfile" name="gisfile">
                     </p>
