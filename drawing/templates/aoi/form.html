@@ -125,10 +125,19 @@
                     <br />
                     <p>
                         <i data-bind="visible: (!isImporting())"><b>OR</b></i> 
-                        <label for="gisfile">import from a file:</label> 
+                        
+                        <label for="gisfile">
+                            import from a file: 
+                        </label> 
                         <input type="file" id="gisfile" name="gisfile">
                     </p>
-                    <!-- <p>What kind of file?<a class="btn">Help</a></p> -->
+                    <div class="info-links">
+                        <a class="btn" data-bind="click: showGISImportHelp"><i class="fa fa-info-circle"></i> Help</a><br/>
+                        Importing: <a class="btn" data-bind="click: showShapefileHelp">Shapefiles</a>
+                        <a class="btn" data-bind="click: showCSVHelp">CSVs/TSVs</a>
+                        <a class="btn" data-bind="click: showGeoJSONHelp">GeoJSON</a>
+                    </div>
+
                 </div>
             </div>
             <div data-bind="visible: showEdit()">
