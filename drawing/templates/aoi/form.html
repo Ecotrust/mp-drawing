@@ -1,4 +1,21 @@
+{% load static %}
 <div class="featurepanel">
+    <!-- Support for zipped shapefiles: -->
+    <script type="text/javascript" src="{% static 'drawing/assets/shp2geojson/lib/jszip.js' %}"></script>
+    <script type="text/javascript" src="{% static 'drawing/assets/shp2geojson/lib/jszip-utils.js' %}"></script>
+    <script type="text/javascript" src="{% static 'drawing/assets/proj4/proj4.js' %}"></script>
+    <script type="text/javascript" src="{% static 'drawing/assets/shp2geojson/preprocess.js' %}"></script>
+    <script type="text/javascript" src="{% static 'drawing/assets/shp2geojson/preview.js' %}"></script>
+    
+    <!-- Support for unzipped shapefiles: -->
+    <script type="text/javascript" src="{% static 'drawing/assets/js-shapefile-to-geojson/stream.js' %}"></script>
+    <script type="text/javascript" src="{% static 'drawing/assets/js-shapefile-to-geojson/shapefile.js' %}"></script>
+    <script type="text/javascript" src="{% static 'drawing/assets/js-shapefile-to-geojson/dbf.js' %}"></script>
+    
+    <!-- Support for csv files: -->
+    <script type="text/javascript" src="{% static 'drawing/assets/jquery_csv/jquery.csv-0.71.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'drawing/assets/csv2geojson/csv2geojson.js' %}"></script>
+
     <script type="text/javascript" charset="utf-8">
         madrona.onShow(function(){
             madrona.setupForm($('#polygon-design-form'));
@@ -7,19 +24,23 @@
             var step = 1;
 
             function validate(step) {
-                return_value = true;
+                let is_valid = false;
                 if (step == 1) {
-                    if ( app.viewModel.scenarios.drawingFormModel.isDrawing()) {
+                    if ( !app.viewModel.scenarios.drawingFormModel.isDrawing() && app.viewModel.scenarios.drawingFormModel.hasShape() ) {
+                        is_valid = true;
+                    } 
+                    if ( !app.viewModel.scenarios.drawingFormModel.isDrawing()) {
                         $('#double-click-instructions').effect("highlight", {}, 1000);
-                        return_value = false;
-                    } else if ( ! app.viewModel.scenarios.drawingFormModel.hasShape() ) {
+                        // is_valid = false;
+                    } 
+                    if ( ! app.viewModel.scenarios.drawingFormModel.hasShape() ) {
                         $('#click-to-begin-drawing').effect("highlight", {}, 1000);
-                        return_value = false;
+                        // is_valid = false;
                     }
                 } else if (step == max_step) {
-
+                    is_valid = true;
                 }
-                return return_value;
+                return is_valid;
             };
 
             function wizard(action) {
@@ -73,7 +94,7 @@
         });
     </script>
 
-    <h4>Drawing</h4>
+    <h4>Shapes</h4>
 
     <form id="polygon-design-form" action="{{action}}" method="post">
         {% for hidden in form.hidden_fields %}
@@ -87,24 +108,47 @@
         <div id="step1" class="step">
             <p class="step-text"><i>Step 1 of 2 </i>
             <div data-bind="visible: ! showEdit()">
-                <p id="click-to-begin-drawing" class="instructions">Click one of the buttons below to begin drawing your map features.</p>
-                <a class="btn btn-warning" style="margin-top: 10px" data-bind="click: startPolygonSketch, css: { disabled: isDrawing() }">
-                    <span>Draw Shape</span>
-                </a>
-                <a class="btn btn-warning" style="margin-top: 10px" data-bind="click: startLineSketch, css: { disabled: isDrawing() }">
-                    <span>Draw Line</span>
-                </a>
-                <a class="btn btn-warning" style="margin-top: 10px" data-bind="click: startPointSketch, css: { disabled: isDrawing() }">
-                    <span>Draw Point</span>
-                </a>
+                <div id="draw-buttons-wrapper" data-bind="visible: (!isImporting())">
+                    <p id="click-to-begin-drawing" class="instructions">Click one of the buttons below to begin drawing your map features.</p>
+                    <a class="btn btn-warning" style="margin-top: 10px" data-bind="click: startPolygonSketch, css: { disabled: isDrawing() }">
+                        <span>Draw Shape</span>
+                    </a>
+                    <a class="btn btn-warning" style="margin-top: 10px" data-bind="click: startLineSketch, css: { disabled: isDrawing() }">
+                        <span>Draw Line</span>
+                    </a>
+                    <a class="btn btn-warning" style="margin-top: 10px" data-bind="click: startPointSketch, css: { disabled: isDrawing() }">
+                        <span>Draw Point</span>
+                    </a>
+                </div>
+                
+                <div id="gis_import_form" data-bind="visible: (!showEdit() && !isDrawing())">
+                    <br />
+                    <p>
+                        <i data-bind="visible: (!isImporting())"><b>OR</b></i> 
+                        
+                        <label for="gisfile">
+                            import from a file: 
+                        </label> 
+                        <input type="file" id="gisfile" name="gisfile">
+                    </p>
+                    <div class="info-links">
+                        <a class="btn" data-bind="click: showGISImportHelp"><i class="fa fa-info-circle"></i> Help</a><br/>
+                        Importing: <a class="btn" data-bind="click: showShapefileHelp">Shapefiles</a>
+                        <a class="btn" data-bind="click: showCSVHelp">CSVs/TSVs</a>
+                        <a class="btn" data-bind="click: showGeoJSONHelp">GeoJSON</a>
+                    </div>
+
+                </div>
             </div>
             <div data-bind="visible: showEdit()">
-                <p class="instructions">Click <b>Next</b> if you are satisfied with your shape.</p>
-                <p class="instructions">Click <b>Edit Drawings</b> if you would like to make changes to your drawings.</p>
-                <p class="instructions">Click <b>Add (Feature)</b> if you would like to add more shapes to your drawing.</p>
-                <a class="btn btn-default" style="margin-top: 10px" data-bind="click: startEdit, css: { disabled: (isEditing() || isDrawing()) }">
-                    <span><b>Edit</b> Drawings</span>
-                </a>
+                <div data-bind="visible: !isEditing()" id="edit-init-instructions">
+                    <p class="instructions">Click <b>Next</b> if you are satisfied with your shape.</p>
+                    <p class="instructions">Click <b>Edit Drawings</b> if you would like to make changes to your drawings.</p>
+                    <p class="instructions">Click <b>Add (Feature)</b> if you would like to add more shapes to your drawing.</p>
+                    <a class="btn btn-default" style="margin-top: 10px" data-bind="click: startEdit, css: { disabled: (isEditing() || isDrawing()) }">
+                        <span><b>Edit</b> Drawings</span>
+                    </a>
+                </div>
                 <br/>
                 <a class="btn btn-default" style="margin-top: 10px" data-bind="click: startPolygonSketch, css: { disabled: (isEditing() || isDrawing()) }, visible: sketchMode() == 'polygon'">
                     <span>Add <b>Shape</b></span>
@@ -192,5 +236,7 @@
             </div>
         </div>
     </form>
+
+    <script type="text/javascript" src="{% static 'drawing/js/import_gis.js' %}"></script>
 
 </div>
