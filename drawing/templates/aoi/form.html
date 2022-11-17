@@ -124,7 +124,7 @@
                 <div id="gis_import_form" data-bind="visible: (!showEdit() && !isDrawing())">
                     <br />
                     <p>
-                        <i data-bind="visible: (!isImporting())"><b>OR</b></i> 
+                        <i data-bind="visible: !isImporting()"><b>OR</b></i> 
                         
                         <label for="gisfile">
                             import from a file: 
@@ -144,7 +144,7 @@
                 <div data-bind="visible: !isEditing()" id="edit-init-instructions">
                     <p class="instructions">Click <b>Next</b> if you are satisfied with your shape.</p>
                     <p class="instructions">Click <b>Edit Drawings</b> if you would like to make changes to your drawings.</p>
-                    <p class="instructions">Click <b>Add (Feature)</b> if you would like to add more shapes to your drawing.</p>
+                    <p class="instructions">Click <b>Add <span id="edit-feature-type">(Feature)</span></b> if you would like to add more shapes to your drawing.</p>
                     <a class="btn btn-default" style="margin-top: 10px" data-bind="click: startEdit, css: { disabled: (isEditing() || isDrawing()) }">
                         <span><b>Edit</b> Drawings</span>
                     </a>
