@@ -1,3 +1,4 @@
+from django.contrib.gis.geos import WKTReader, WKTWriter
 from django.db import models
 from django.utils.html import escape
 from features.registry import register
@@ -11,6 +12,14 @@ class AOI(GeometryFeature):
         verbose_name_plural = 'AOIs'
 
     description = models.TextField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.geometry_orig.hasz:
+            
+            wkt_2d = WKTWriter(dim=2).write(self.geometry_orig)
+            self.geometry_orig = WKTReader().read(wkt_2d)
+
+        super(AOI, self).save(*args, **kwargs)
 
     @property
     def area_in_sq_miles(self):
