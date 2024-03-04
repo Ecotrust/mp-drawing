@@ -1,7 +1,7 @@
 $('#gisfile').on('change', function(){
     let validity = validate_input_file()
     if (validity.length > 0 && !validity.type_valid) {
-        window.alert('File type not recognized. Is your file a ".shp", ".zip", ".csv", ".json", or ".geojson"?');
+        window.alert('File type not recognized. Is your file a ".shp", ".zip", ".csv", ".kml", ".kmz", ".json", or ".geojson"?');
         $('#gisfile').val('');
     } else if (validity.is_valid && validity.type_valid) {
         interpret_file();
@@ -15,7 +15,8 @@ showGISImportHelp = function() {
             "<li> Accepted formats include: <ul>" +
                 "<li>zipped ESRI shapefiles</li>" +
                 "<li>CSV/TSV files</li>" + 
-                "<li>GeoJSON</li>" +
+                "<li>GeoJSON files</li>" +
+                "<li>KML files</li>" +
                 "</ul></li>" +
             "<li>your file will need to be in the <b>EPSG: 4326 (WGS 84)</b> projection " +
             "<b><u>or</u></b> a shapefile containing a .prj file.</li>" + 
@@ -70,6 +71,24 @@ showGeoJSONHelp = function() {
         "<li>Contain only valid, non-intersecting features (i.e. bow-ties)</li>" +
         "<li>Use a file extension of either '.json' or '.geojson'</li>" +
     "</ul>" + 
-    "If unsure of your GeoJSON files validity, you're welcome to test it here or debug it at <a href=\"https://geojson.io\" target=\"_blank\">geojson.io</a>";
+    "If unsure of your GeoJSON file's validity, you're welcome to test it here or debug it at <a href=\"https://geojson.io\" target=\"_blank\">geojson.io</a>";
     app.viewModel.alert.showDialog(title, content);
 };
+
+showKMLHelp = function() {
+    var title = "Import KML Help";
+    var content = "KML files are commonly used with Google products like Google Maps or Google Earth. <br />" + 
+    "KML files may be imported directly into this tool. The must" + 
+    "<ul>" +
+        "<li>Be a true .KML: <b><u>NOT</u></b> a .KMZ</li>" + 
+        "<ul>" +
+           "<li>You can use an unzipping tool to extract a KML from a KMZ, as a KMZ is just a zipped KML.</li>" +
+        "</ul>" +
+        "<li>Be less than 5MB in size</li>" +
+        "<li>Contain only valid, non-self-intersecting features (i.e. bow-ties)</li>" +
+        "<li>Use a file extension of '.KML'</li>" +
+    "</ul>" + 
+    "If unsure of your KML file's validity, you're welcome to test it here or debug it at <a href=\"https://geojson.io\" target=\"_blank\">geojson.io</a>";
+    app.viewModel.alert.showDialog(title, content);
+
+}
