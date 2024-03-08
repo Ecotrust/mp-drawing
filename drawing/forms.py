@@ -18,7 +18,7 @@ class AOIForm(SpatialFeatureForm):
                 attrs={"type": "color", "title": "stroke color", "value":"{}".format(self.instance.stroke_color)}
             )
             self.fields['stroke_width'].widget = forms.widgets.NumberInput(
-                attrs={"value": self.instance.stroke_width, "min": 0, "max":15, "step": 1}
+                attrs={"value": self.instance.stroke_width, "min": 0, "max":10, "step": 1}
             )
 
     description = forms.CharField(widget=forms.Textarea(attrs={'cols': 30, 'rows': 3}), required=False)
