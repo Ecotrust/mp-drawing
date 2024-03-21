@@ -1,4 +1,5 @@
 {% load static %}
+{% load template_filters %}
 <div class="featurepanel">
     <!-- Support for zipped shapefiles: -->
     <script type="text/javascript" src="{% static 'drawing/assets/shp2geojson/lib/jszip.js' %}"></script>
@@ -221,6 +222,56 @@
                     {{ form.description.errors }}
                     {{ form.description }}
                 </div>
+                <table>
+                    
+                    <tr class="step3-param"
+                    {% if form.geometry_orig.value|contains:"LINESTRING" %}
+                        style="display:none"
+                    {% endif %}
+                    >
+                        <td>
+                            <label for="id-color">Fill Color</label>
+                            {{ form.color.errors }}
+                        </td>
+                        <td>
+                            {{ form.color }}
+                        </td>
+                    </tr>
+
+                    <tr class="step3-param"
+                    {% if form.geometry_orig.value|contains:"LINESTRING" %}
+                        style="display:none"
+                    {% endif %}
+                    >
+                        <td>
+                            <label for="id-fill_opacity">Fill Opacity</label>
+                            {{ form.fill_opacity.errors }}
+                        </td>
+                        <td>
+                            {{ form.fill_opacity }}
+                        </td>
+                    </tr>
+
+                    <tr  class="step3-param">
+                        <td>
+                            <label for="id-stroke_color">Stoke Color</label>
+                            {{ form.stroke_color.errors }}
+                        </td>
+                        <td>
+                            {{ form.stroke_color }}
+                        </td>
+                    </tr>
+                    
+                    <tr class="step3-param">
+                        <td>
+                            <label for="id-stroke_width">Stoke Width</label>
+                            {{ form.stroke_width.errors }}
+                        </td>
+                        <td>
+                            {{ form.stroke_width }}
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
 

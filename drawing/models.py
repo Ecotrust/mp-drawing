@@ -1,3 +1,4 @@
+from colorfield.fields import ColorField
 from django.contrib.gis.geos import WKTReader, WKTWriter
 from django.db import models
 from django.utils.html import escape
@@ -11,7 +12,37 @@ class AOI(GeometryFeature):
         verbose_name = 'AOI'
         verbose_name_plural = 'AOIs'
 
+    COLOR_PALETTE = []
+
+    COLOR_PALETTE.append(("#FFFFFF", 'white'))
+    COLOR_PALETTE.append(("#888888", 'gray'))
+    COLOR_PALETTE.append(("#000000", 'black'))
+    COLOR_PALETTE.append(("#FF0000", 'red'))
+    COLOR_PALETTE.append(("#FFFF00", 'yellow'))
+    COLOR_PALETTE.append(("#00FF00", 'green'))
+    COLOR_PALETTE.append(("#00FFFF", 'cyan'))
+    COLOR_PALETTE.append(("#0000FF", 'blue'))
+    COLOR_PALETTE.append(("#FF00FF", 'magenta'))
+
     description = models.TextField(null=True, blank=True)
+    color = ColorField(
+        blank=True,
+        null=True,
+        default="#EE9900",
+        verbose_name="Fill Color",
+        samples=COLOR_PALETTE,
+    )
+    fill_opacity = models.FloatField(
+        default=0.7,
+    )
+    stroke_color = ColorField(
+        blank=True,
+        null=True,
+        default="#EE9900",
+        verbose_name="Stroke Color",
+        samples=COLOR_PALETTE,
+    )
+    stroke_width = models.IntegerField(null=True, blank=True, default=2, verbose_name="Stroke Width")
 
     def save(self, *args, **kwargs):
         if self.geometry_orig.hasz:
