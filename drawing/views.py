@@ -11,21 +11,23 @@ from .models import AOI, WindEnergySite
 
 
 def get_drawings(request):
-
+    # TODO: streamline this code! It is really slow!
+    # Caching a AOI.to_dict() would be a good idea
 
     json = []
 
-    drawings = AOI.objects.filter(user=request.user.id).order_by('date_created')
+    drawings = AOI.objects.filter(user=request.user.id).order_by('date_created').prefetch_related('sharing_groups__mapgroup_set')
+    public_groups_qr = Group.objects.filter(name__in=settings.SHARING_TO_PUBLIC_GROUPS)
     for drawing in drawings:
         # Allow for "sharing groups" without an associated MapGroup, for "special" cases
         sharing_groups = [
-            group.mapgroup_set.get().name
+            group.mapgroup_set.all()[0].name
             for group in drawing.sharing_groups.all()
             if group.mapgroup_set.exists()
         ]
         public_groups = [
             group.name
-            for group in Group.objects.filter(name__in=settings.SHARING_TO_PUBLIC_GROUPS)
+            for group in public_groups_qr
             if group in drawing.sharing_groups.all()
         ]
         sharing_groups = sharing_groups + public_groups
@@ -41,9 +43,9 @@ def get_drawings(request):
         })
 
     try:
-        shared_drawings = AOI.objects.shared_with_user(request.user)
+        shared_drawings = AOI.objects.shared_with_user(request.user).prefetch_related('sharing_groups__mapgroup_set')
     except Exception as e:
-        shared_drawings = AOI.objects.filter(pk=-1)
+        shared_drawings = AOI.objects.filter(pk=-1).prefetch_related('sharing_groups__mapgroup_set')
         pass
     for drawing in shared_drawings:
         if drawing not in drawings:
@@ -63,7 +65,7 @@ def get_drawings(request):
             owned_by_user = True if len(sharing_groups) > 0 else False
             public_groups = [
                 group.name
-                for group in Group.objects.filter(name__in=settings.SHARING_TO_PUBLIC_GROUPS)
+                for group in public_groups_qr
                 if group in drawing.sharing_groups.all()
             ]
             sharing_groups = sharing_groups + public_groups
