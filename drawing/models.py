@@ -115,28 +115,36 @@ class AOI(GeometryFeature):
             total_area = 0
             total_length = 0
             points = []
-            for feature in self.geometry_final:
-                feature = feature.transform(2163, clone=True)
-                if feature.geom_type in ['Polygon', 'MultiPolygon']:
-                    total_area += feature.area
-                elif feature.geom_type in ['LineString',]:
-                    total_length += feature.length
-                elif feature.geom_type in ['Point',]:
-                    feature = feature.transform(4326, clone=True)
-                    points.append("[{:.4f}, {:.4f}]".format(feature.coords[1], feature.coords[0]))
-                else:
-                    print("NEW FEATURE TYPE: {}".format(feature.geom_type))
-            if total_area > 0:
-                attributes.append({'title': 'Area', 'data': '%.1f sq miles' % (self.area_in_sq_miles)})
-            if total_length > 0:
-                if total_length < 800:
-                    report_length = "{} feet ({} yds)".format(int(total_length/0.3048), int(total_length/0.9144))
-                else:
-                    report_length = "{:.2f} miles".format(total_length/1609.344)
-                attributes.append({'title': 'Line Length', 'data': '{}'.format(report_length)})
-            if len(points) > 0:
-                attributes.append({'title': 'Point Coordinates', 'data': '{}'.format('; '.join(points))})
-            attributes.append({'title': 'Description', 'data': self.description})
+            try:
+                feature_type = self.geometry_final[0].geom_type
+                if feature_type in ['Polygon', 'MultiPolygon', 'LineString']:
+                    geometry = self.geometry_final.transform(2163, clone=True)
+                    for feature in geometry:
+                        if feature.geom_type in ['Polygon', 'MultiPolygon']:
+                            total_area += feature.area
+                        elif feature.geom_type in ['LineString',]:
+                            total_length += feature.length
+                elif feature_type == 'Point':
+                    geometry = self.geometry_final.transform(4326, clone=True)
+                    for feature in geometry:
+                        points.append("[{:.4f}, {:.4f}]".format(feature.coords[1], feature.coords[0]))
+
+                if total_area > 0:
+                    attributes.append({'title': 'Area', 'data': '%.1f sq miles' % (self.area_in_sq_miles)})
+                if total_length > 0:
+                    if total_length < 800:
+                        report_length = "{} feet ({} yds)".format(int(total_length/0.3048), int(total_length/0.9144))
+                    else:
+                        report_length = "{:.2f} miles".format(total_length/1609.344)
+                    attributes.append({'title': 'Line Length', 'data': '{}'.format(report_length)})
+                if len(points) > 0:
+                    attributes.append({'title': 'Point Coordinates', 'data': '{}'.format('; '.join(points))})
+                attributes.append({'title': 'Description', 'data': self.description})
+            except Exception as e:
+                # Most likely geometry collection contained multiple geometry types
+                attributes = []
+                pass
+
         return { 'event': 'click', 'attributes': attributes }
 
     @classmethod
