@@ -1,4 +1,5 @@
 from colorfield.fields import ColorField
+from django.conf import settings
 from django.contrib.gis.geos import WKTReader, WKTWriter
 from django.db import models
 from django.utils.html import escape
@@ -54,7 +55,10 @@ class AOI(GeometryFeature):
 
     @property
     def area_in_sq_miles(self):
-        true_area = self.geometry_final.transform(2163, clone=True).area
+        true_area = self.geometry_final.transform(
+            getattr(settings, 'EQUAL_AREA_PROJ', 9311),
+            clone=True
+        ).area
         return sq_meters_to_sq_miles(true_area)
 
     @property
@@ -118,7 +122,10 @@ class AOI(GeometryFeature):
             try:
                 feature_type = self.geometry_final[0].geom_type
                 if feature_type in ['Polygon', 'MultiPolygon', 'LineString']:
-                    geometry = self.geometry_final.transform(2163, clone=True)
+                    geometry = self.geometry_final.transform(
+                        getattr(settings, 'EQUAL_AREA_PROJ', 9311), 
+                        clone=True
+                    )
                     for feature in geometry:
                         if feature.geom_type in ['Polygon', 'MultiPolygon']:
                             total_area += feature.area
