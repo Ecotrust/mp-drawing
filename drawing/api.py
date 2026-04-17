@@ -5,6 +5,8 @@ Replaces this former XML-RPC method:
 """
 from __future__ import annotations
 
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
@@ -24,7 +26,10 @@ class DrawingDeleteView(APIView):
     def delete(self, request: Request, uid: str) -> Response:
         from features.registry import get_feature_by_uid
 
-        drawing_obj = get_feature_by_uid(uid)
+        try:
+            drawing_obj = get_feature_by_uid(uid)
+        except ObjectDoesNotExist as exc:
+            raise Http404("Drawing not found") from exc
         viewable, _response = drawing_obj.is_viewable(request.user)
         if not viewable:
             return _response
