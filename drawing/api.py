@@ -26,6 +26,7 @@ class DrawingDeleteView(APIView):
 
         drawing_obj = get_feature_by_uid(uid)
         viewable, _response = drawing_obj.is_viewable(request.user)
-        if viewable:
-            drawing_obj.delete()
+        if not viewable:
+            return _response
+        drawing_obj.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
